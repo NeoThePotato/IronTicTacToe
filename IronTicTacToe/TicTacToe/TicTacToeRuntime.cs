@@ -1,6 +1,7 @@
 ﻿using IronEngine;
 using IronEngine.IO;
 using IronEngine.DefaultRenderer;
+using static IronEngine.ICommandAble;
 
 namespace TicTacToe
 {
@@ -10,14 +11,27 @@ namespace TicTacToe
 		const int X_INDEX = 0;
 		const int Y_INDEX = 1;
 
+		public Stack<Command> CommandLog { get; set; }
+
 		public new static TicTacToeRuntime Instance => Runtime.Instance as TicTacToeRuntime;
 
 		public Player X => Actors.ElementAt(X_INDEX) as Player;
 		public Player O => Actors.ElementAt(Y_INDEX) as Player;
 
-		public override bool ExitCondition => false; // TODO Implement exit condition
+		public override bool ExitCondition
+		{
+			get
+			{
+				return false; // TODO Implement Exit condition
+			}
+		}
 
 		public override IInput Input => IInput.ConsoleInput;
+
+		public TicTacToeRuntime()
+		{
+			CommandLog = new(BOARD_SIZE * BOARD_SIZE);
+		}
 
 		protected override IEnumerable<Actor> CreateActors()
 		{
@@ -39,6 +53,12 @@ namespace TicTacToe
 		{
 			if (CurrentActor is Player winner)
 				Console.WriteLine($"Game ended.\n{winner} wins.");
+		}
+
+		protected override void OnCommandSelected(Command command)
+		{
+			if (command.Key != "Undo")
+				CommandLog.Push(command);
 		}
 	}
 }
