@@ -14,7 +14,20 @@ namespace TicTacToe
 				@"|  |",
 				@"\__/"
 				];
-
-		public Marker(Player player) : base(player) => Chars = player.PlayerMarker == 'X' ? X_MARKER : O_MARKER;
+		private const int X_COLOR = 4;
+		private const int O_COLOR = 5;
+		public Marker(Player player) : base(player)
+		{
+			if (player.PlayerMarker == 'X')
+			{
+				Chars = X_MARKER;
+				FgColor = X_COLOR;
+			}
+			else
+			{
+				Chars = O_MARKER;
+				FgColor = O_COLOR;
+			}
+		}
 	}
 }

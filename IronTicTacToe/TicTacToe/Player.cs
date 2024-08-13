@@ -1,16 +1,19 @@
 ﻿using IronEngine;
+using static IronEngine.ICommandAble;
 
 namespace TicTacToe
 {
-	internal class Player(string name) : Actor, ICommandAble
+	internal class Player(string name) : Actor, IHasKey
 	{
 		public string Name { get; private set; } = name;
 
 		public char PlayerMarker => this == TicTacToeRuntime.Instance.X ? 'X' : 'O';
 
-		public Actor Actor => this;
+		public string? Key => "P";
 
-		public IEnumerable<ICommandAble.Command> GetAvailableActions()
+		public string Description => $"Place {PlayerMarker} on a tile.";
+
+		public override IEnumerable<ICommandAble.Command> GetAvailableActions()
 		{
 			var board = Runtime.Instance.TileMap;
 			foreach (var tile in board.Where(t => !t.HasObject).Cast<Tile>())

@@ -6,7 +6,7 @@ namespace TicTacToe
 {
 	internal class TicTacToeRuntime : Runtime
 	{
-		const int BOARD_SIZE = 3;
+		public const int BOARD_SIZE = 3;
 		const int X_INDEX = 0;
 		const int Y_INDEX = 1;
 
