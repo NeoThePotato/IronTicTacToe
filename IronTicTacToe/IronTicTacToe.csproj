@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IronEngine\DefaultRenderer\DefaultRenderer.csproj" />
+    <ProjectReference Include="..\IronEngine\IronEngine.csproj" />
+  </ItemGroup>
+
 </Project>

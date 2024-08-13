@@ -5,6 +5,10 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IronTicTacToe", "IronTicTacToe\IronTicTacToe.csproj", "{0532807A-848A-4AFA-9817-79E99A5BCF59}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IronEngine", "IronEngine\IronEngine.csproj", "{126424D7-92E9-4B30-9F15-4C2640BF30AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DefaultRenderer", "IronEngine\DefaultRenderer\DefaultRenderer.csproj", "{E977FEEC-9B5F-4572-B27D-B96DF07CF6DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{0532807A-848A-4AFA-9817-79E99A5BCF59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0532807A-848A-4AFA-9817-79E99A5BCF59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0532807A-848A-4AFA-9817-79E99A5BCF59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{126424D7-92E9-4B30-9F15-4C2640BF30AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{126424D7-92E9-4B30-9F15-4C2640BF30AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{126424D7-92E9-4B30-9F15-4C2640BF30AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{126424D7-92E9-4B30-9F15-4C2640BF30AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E977FEEC-9B5F-4572-B27D-B96DF07CF6DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E977FEEC-9B5F-4572-B27D-B96DF07CF6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E977FEEC-9B5F-4572-B27D-B96DF07CF6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E977FEEC-9B5F-4572-B27D-B96DF07CF6DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

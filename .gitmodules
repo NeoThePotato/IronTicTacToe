@@ -1,0 +1,3 @@
+[submodule "IronEngine"]
+	path = IronEngine
+	url = https://github.com/NeoThePotato/IronEngine
