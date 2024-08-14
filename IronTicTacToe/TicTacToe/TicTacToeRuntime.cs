@@ -57,7 +57,7 @@ namespace TicTacToe
 
 		protected override void OnCommandSelected(Command command)
 		{
-			if (command.Key != "Undo")
+			if (command.Key != "Undo" && command.Key != "Deselect")
 				CommandLog.Push(command);
 		}
 	}
