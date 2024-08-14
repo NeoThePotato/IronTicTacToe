@@ -45,7 +45,9 @@ namespace TicTacToe
 		{
 			var map = new TileMap(BOARD_SIZE, BOARD_SIZE, new Tile());
 			foreach (var tile in map.Checkerboard().Cast<Tile>())
-				tile.BgColor = ConsoleRenderer.COLOR_WHITE;
+				tile.BgColor = (byte)ConsoleColor.Gray;
+			foreach (var tile in map.Checkerboard(1).Cast<Tile>())
+				tile.BgColor = (byte)ConsoleColor.DarkGray;
 			return map;
 		}
 
