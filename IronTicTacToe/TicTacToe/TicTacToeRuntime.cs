@@ -18,11 +18,27 @@ namespace TicTacToe
 		public Player X => Actors.ElementAt(X_INDEX) as Player;
 		public Player O => Actors.ElementAt(Y_INDEX) as Player;
 
+		private IEnumerable<Tile> _completedChain;
+
 		public override bool ExitCondition
 		{
 			get
 			{
-				return false; // TODO Implement Exit condition
+				_completedChain = TileMap.GetAllPossibleChains().FirstOrDefault(AllSameActor);
+				return _completedChain != null || AllMarkersPlaced();
+
+				bool AllSameActor(IEnumerable<Tile> chain)
+				{
+					var firstTile = chain.First();
+					if (firstTile.HasObject)
+					{
+						var actor = firstTile.Actor;
+						return chain.All(t => t.TryGetObject<Marker>(out var marker) && marker.Actor == actor);
+					}
+					return false;
+				}
+
+				bool AllMarkersPlaced() => TileMap.All(t => t.HasObject);
 			}
 		}
 
@@ -53,8 +69,13 @@ namespace TicTacToe
 
 		protected override void OnExit()
 		{
-			if (CurrentActor is Player winner)
+			if (_completedChain != null)
+			{
+				Player winner = _completedChain.First().Object.Actor as Player;
+				foreach (var tile in _completedChain.Cast<Tile>())
+					tile.BgColor = (byte)ConsoleColor.Yellow;
 				Console.WriteLine($"Game ended.\n{winner} wins.");
+			}
 		}
 
 		protected override void OnCommandSelected(Command command)
