@@ -3,22 +3,34 @@ using static IronEngine.ICommandAble;
 
 namespace TicTacToe
 {
+	/// <summary>
+	/// Represents a single player in a <see cref="TicTacToe"/> game.
+	/// </summary>
 	public class Player : Actor
 	{
 		public char PlayerMarker => this == TicTacToeRuntime.Instance.X ? 'X' : 'O';
 
-		public TileObject LastPlaced { get; set; }
+		private readonly ICommandAble _placeMarker, _undo;
+
+		public Player()
+		{
+			_placeMarker = new PlaceMarker();
+			_undo = new Undo();
+		}
 
 		public override string ToString() => PlayerMarker.ToString();
 
 		protected override IEnumerable<ICommandAble> FilterCommandAble(IEnumerable<ICommandAble> source)
 		{
-			source = source.Append(new PlaceMarker());
+			source = source.Append(_placeMarker);
 			if (TicTacToeRuntime.Instance.CommandLog.Count > 0)
-				source = source.Append(new Undo());
+				source = source.Append(_undo);
 			return source;
 		}
 
+		/// <summary>
+		/// Allows the <see cref="Player"/> to place a <see cref="Marker"/> on the <see cref="TileMap"/>.
+		/// </summary>
 		private class PlaceMarker : ICommandAble, IHasKey
 		{
 			public Actor? Actor => TicTacToeRuntime.Instance.CurrentActor;
@@ -46,6 +58,9 @@ namespace TicTacToe
 			}
 		}
 
+		/// <summary>
+		/// Allows the <see cref="Player"/> to undo a previous <see cref="Command"/>.
+		/// </summary>
 		private class Undo : ICommandAble, IHasKey
 		{
 			public Actor? Actor => TicTacToeRuntime.Instance.CurrentActor;

@@ -2,10 +2,12 @@
 using IronEngine.IO;
 using IronEngine.DefaultRenderer;
 using static IronEngine.ICommandAble;
-using System.Reflection;
 
 namespace TicTacToe
 {
+	/// <summary>
+	/// The execution <see cref="Runtime"/> of the <see cref="TicTacToe"/> game.
+	/// </summary>
 	public class TicTacToeRuntime : Runtime
 	{
 		#region CONSTS
@@ -19,6 +21,10 @@ namespace TicTacToe
 		public new static TicTacToeRuntime Instance => Runtime.Instance as TicTacToeRuntime;
 		public Player X => Actors.ElementAt(X_INDEX) as Player;
 		public Player O => Actors.ElementAt(Y_INDEX) as Player;
+
+		/// <summary>
+		/// Exits the game once a player completes a 3-<see cref="Marker"/> long chain. Or once all <see cref="Tile"/>s are occupied.
+		/// </summary>
 		public override bool ExitCondition
 		{
 			get
@@ -53,6 +59,10 @@ namespace TicTacToe
 			_input.SelectCommandAblePrompt = "Select action:";
 		}
 
+		/// <summary>
+		/// Creates 2 <see cref="Player"/>s for the <see cref="Runtime"/>.
+		/// </summary>
+		/// <returns>The newly-created <see cref="Player"/>s.</returns>
 		protected override IEnumerable<Actor> CreateActors()
 		{
 			yield return new Player();
@@ -61,6 +71,10 @@ namespace TicTacToe
 
 		protected override IRenderer CreateRenderer() => new ConsoleRenderer(TileMap);
 
+		/// <summary>
+		/// Create an empty <see cref="TileMap"/> and feeds it back to the <see cref="Runtime"/>.
+		/// </summary>
+		/// <returns>The created <see cref="TileMap"/>.</returns>
 		protected override TileMap CreateTileMap()
 		{
 			var map = new TileMap(BOARD_SIZE, BOARD_SIZE, new Tile());
@@ -71,20 +85,33 @@ namespace TicTacToe
 			return map;
 		}
 
+		/// <summary>
+		/// When the <see cref="Runtime"/> exits, print the result of the game to the <see cref="Console"/>.
+		/// Highlight the winning chain, if exists.
+		/// </summary>
 		protected override void OnExit()
 		{
 			if (_completedChain != null)
 			{
-				Player winner = _completedChain.First().Object.Actor as Player;
-				foreach (var tile in _completedChain.Cast<Tile>())
-					tile.BgColor = (byte)ConsoleColor.Yellow;
-				Renderer.UpdateFrame();
+				HighlightChain(_completedChain, ConsoleColor.Yellow);
+				var winner = _completedChain.First().Object.Actor;
 				Console.WriteLine($"Game ended.\n{winner} wins.");
 			}
 			else
 				Console.WriteLine("Game ended.\nIt's a draw.");
+
+			void HighlightChain(IEnumerable<Tile> chain, ConsoleColor color)
+			{
+				foreach (var tile in chain.Cast<Tile>())
+					tile.BgColor = (byte)color;
+				Renderer.UpdateFrame();
+			}
 		}
 
+		/// <summary>
+		/// Pushes <paramref name="command"/> to the command log. Once it is selected by the user.
+		/// </summary>
+		/// <param name="command"></param>
 		protected override void OnCommandSelected(Command command)
 		{
 			if (command.Key != "Undo" && command.Key != "Deselect")

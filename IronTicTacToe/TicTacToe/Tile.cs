@@ -4,10 +4,18 @@ using static TicTacToe.TicTacToeRuntime;
 
 namespace TicTacToe
 {
+	/// <summary>
+	/// Chain is an alias for <see cref="Tile"/>s in a single line; either vertically, horizontally, or diagonally.
+	/// </summary>
+	using Chain = IEnumerable<Tile>;
+
+	/// <summary>
+	/// Represents a single tile in a <see cref="TicTacToe"/> <see cref="TileMap"/>.
+	/// </summary>
 	public class Tile : RenderableTile, ICommandAble.IHasKey
 	{
 		private static readonly string[] X_TO_STRING = ["Left", "Middle", "Right"];
-		private static readonly string[] Y_TO_STRING = ["Up", "Center", "Down"];
+		private static readonly string[] Y_TO_STRING = ["Top", "Center", "Bottom"];
 
 		public string? Key => ToString();
 
@@ -15,12 +23,15 @@ namespace TicTacToe
 
 		public override string ToString() => $"{1 + Position.x + (BOARD_SIZE * (BOARD_SIZE - Position.y - 1))}";
 
-		public string ToStringLong() => $"{X_TO_STRING[Position.x]}-{Y_TO_STRING[Position.y]}";
+		public string ToStringLong() => $"{Y_TO_STRING[Position.y]}-{X_TO_STRING[Position.x]}";
 	}
 
+	/// <summary>
+	/// Contains functions for getting series of <see cref="Chain"/>s. Useful for checking for win conditions.
+	/// </summary>
 	public static class TileExtensions
 	{
-		public static IEnumerable<IEnumerable<Tile>> GetAllPossibleChains(this TileMap tileMap)
+		public static IEnumerable<Chain> GetAllPossibleChains(this TileMap tileMap)
 		{
 			for (var row = 0; row < tileMap.SizeY; row++)
 				yield return tileMap.GetRow(row);
@@ -30,19 +41,25 @@ namespace TicTacToe
 			yield return tileMap.GetDiagonal(false);
 		}
 
-		public static IEnumerable<Tile> GetRow(this TileMap tileMap, int row)
+		/// <returns>The <paramref name="row"/>th row in <paramref name="tileMap"/>.</returns>
+		public static Chain GetRow(this TileMap tileMap, int row)
 		{
 			for (int y = 0; y < tileMap.SizeX; y++)
 				yield return tileMap[new(row, y)] as Tile;
 		}
 
-		public static IEnumerable<Tile> GetColumn(this TileMap tileMap, int column)
+		/// <returns>The <paramref name="column"/>th column in <paramref name="tileMap"/>.</returns>
+		public static Chain GetColumn(this TileMap tileMap, int column)
 		{
 			for (int x = 0; x < tileMap.SizeY; x++)
 				yield return tileMap[new(x, column)] as Tile;
 		}
 
-		public static IEnumerable<Tile> GetDiagonal(this TileMap tileMap, bool downright)
+		/// <returns>
+		/// The down-right diagonal in <paramref name="tileMap"/> if <paramref name="downright"/> is <see langword="true"/>.
+		/// Returns the down-left diagonal otherwise.
+		/// </returns>
+		public static Chain GetDiagonal(this TileMap tileMap, bool downright)
 		{
 			if (downright)
 			{
