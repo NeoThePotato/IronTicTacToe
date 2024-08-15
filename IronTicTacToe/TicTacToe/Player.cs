@@ -31,9 +31,14 @@ namespace TicTacToe
 
 			public IEnumerable<Command> GetAvailableActions()
 			{
-				var board = Runtime.Instance.TileMap;
-				foreach (var tile in board.Where(t => !t.HasObject).Cast<Tile>())
-					yield return new Command(() => PlaceMarker(tile), $"Place '{Player.PlayerMarker}' at {tile.ToStringLong()}.", tile.Key, undo: () => RemoveMarker(tile));
+				return GetAllPlaceMarkerCommands().OrderBy(c => c.Key);
+
+				IEnumerable<Command> GetAllPlaceMarkerCommands()
+				{
+					var board = Runtime.Instance.TileMap;
+					foreach (var tile in board.Where(t => !t.HasObject).Cast<Tile>())
+						yield return new Command(() => PlaceMarker(tile), $"Place '{Player.PlayerMarker}' at {tile.ToStringLong()}.", tile.Key, undo: () => RemoveMarker(tile));
+				}
 
 				void PlaceMarker(Tile tile) => tile.Object = new Marker(Player);
 
