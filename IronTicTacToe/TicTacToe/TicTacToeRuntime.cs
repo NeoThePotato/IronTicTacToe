@@ -2,6 +2,7 @@
 using IronEngine.IO;
 using IronEngine.DefaultRenderer;
 using static IronEngine.ICommandAble;
+using System.Reflection;
 
 namespace TicTacToe
 {
@@ -75,8 +76,11 @@ namespace TicTacToe
 				Player winner = _completedChain.First().Object.Actor as Player;
 				foreach (var tile in _completedChain.Cast<Tile>())
 					tile.BgColor = (byte)ConsoleColor.Yellow;
+				Renderer.UpdateFrame();
 				Console.WriteLine($"Game ended.\n{winner} wins.");
 			}
+			else
+				Console.WriteLine("Game ended.\nIt's a draw.");
 		}
 
 		protected override void OnCommandSelected(Command command)
