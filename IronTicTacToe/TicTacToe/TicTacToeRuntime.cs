@@ -18,7 +18,7 @@ namespace TicTacToe
 		public Player X => Actors.ElementAt(X_INDEX) as Player;
 		public Player O => Actors.ElementAt(Y_INDEX) as Player;
 
-		private IEnumerable<Tile> _completedChain;
+		private IEnumerable<Tile>? _completedChain;
 
 		public override bool ExitCondition
 		{
@@ -29,10 +29,9 @@ namespace TicTacToe
 
 				bool AllSameActor(IEnumerable<Tile> chain)
 				{
-					var firstTile = chain.First();
-					if (firstTile.HasObject)
+					if (chain.First().TryGetObject<Marker>(out var marker))
 					{
-						var actor = firstTile.Actor;
+						var actor = marker!.Actor;
 						return chain.All(t => t.TryGetObject<Marker>(out var marker) && marker.Actor == actor);
 					}
 					return false;
@@ -51,8 +50,8 @@ namespace TicTacToe
 
 		protected override IEnumerable<Actor> CreateActors()
 		{
-			yield return new Player(Input.GetString("X, please enter your name: "));
-			yield return new Player(Input.GetString("O, please enter your name: "));
+			yield return new Player();
+			yield return new Player();
 		}
 
 		protected override IRenderer CreateRenderer() => new ConsoleRenderer(TileMap);
