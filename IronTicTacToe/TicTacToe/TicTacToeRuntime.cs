@@ -5,21 +5,19 @@ using static IronEngine.ICommandAble;
 
 namespace TicTacToe
 {
-	internal class TicTacToeRuntime : Runtime
+	public class TicTacToeRuntime : Runtime
 	{
+		#region CONSTS
 		public const int BOARD_SIZE = 3;
 		const int X_INDEX = 0;
 		const int Y_INDEX = 1;
+		#endregion
 
+		#region FIELDS_AND_PROPERTIES
 		public Stack<Command> CommandLog { get; set; }
-
 		public new static TicTacToeRuntime Instance => Runtime.Instance as TicTacToeRuntime;
-
 		public Player X => Actors.ElementAt(X_INDEX) as Player;
 		public Player O => Actors.ElementAt(Y_INDEX) as Player;
-
-		private IEnumerable<Tile>? _completedChain;
-
 		public override bool ExitCondition
 		{
 			get
@@ -40,9 +38,13 @@ namespace TicTacToe
 				bool AllMarkersPlaced() => TileMap.All(t => t.HasObject);
 			}
 		}
-
 		public override IInput Input => IInput.ConsoleInput;
 
+
+		private IEnumerable<Tile>? _completedChain;
+		#endregion
+
+		#region	METHODS
 		public TicTacToeRuntime()
 		{
 			CommandLog = new(BOARD_SIZE * BOARD_SIZE);
@@ -82,5 +84,6 @@ namespace TicTacToe
 			if (command.Key != "Undo" && command.Key != "Deselect")
 				CommandLog.Push(command);
 		}
+		#endregion
 	}
 }

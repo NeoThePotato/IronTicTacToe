@@ -2,7 +2,7 @@
 
 namespace TicTacToe
 {
-	internal class Marker : RenderableTileObject
+	public class Marker : RenderableTileObject
 	{
 		private static readonly string[] X_MARKER = [
 				@"\  /",

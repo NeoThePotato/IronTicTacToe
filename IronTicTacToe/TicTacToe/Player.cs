@@ -3,15 +3,13 @@ using static IronEngine.ICommandAble;
 
 namespace TicTacToe
 {
-	internal class Player(string name) : Actor
+	public class Player : Actor
 	{
-		public string Name { get; private set; } = name;
-
 		public char PlayerMarker => this == TicTacToeRuntime.Instance.X ? 'X' : 'O';
 
 		public TileObject LastPlaced { get; set; }
 
-		public override string ToString() => Name;
+		public override string ToString() => PlayerMarker.ToString();
 
 		protected override IEnumerable<ICommandAble> FilterCommandAble(IEnumerable<ICommandAble> source)
 		{
