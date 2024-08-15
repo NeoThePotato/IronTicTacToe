@@ -39,9 +39,9 @@ namespace TicTacToe
 				bool AllMarkersPlaced() => TileMap.All(t => t.HasObject);
 			}
 		}
-		public override IInput Input => IInput.ConsoleInput;
+		public override IInput Input => _input;
 
-
+		private readonly ConsoleInput _input;
 		private IEnumerable<Tile>? _completedChain;
 		#endregion
 
@@ -49,6 +49,8 @@ namespace TicTacToe
 		public TicTacToeRuntime()
 		{
 			CommandLog = new(BOARD_SIZE * BOARD_SIZE);
+			_input = new ConsoleInput();
+			_input.SelectCommandAblePrompt = "Select action:";
 		}
 
 		protected override IEnumerable<Actor> CreateActors()
