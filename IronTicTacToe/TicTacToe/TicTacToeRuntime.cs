@@ -17,7 +17,8 @@ namespace TicTacToe
 		#endregion
 
 		#region FIELDS_AND_PROPERTIES
-		public Stack<Command> CommandLog { get; set; }
+		public Stack<Command> UndoLog { get; set; }
+		public Stack<Command> RedoLog { get; set; }
 		public new static TicTacToeRuntime Instance => Runtime.Instance as TicTacToeRuntime;
 		public Player X => Actors.ElementAt(X_INDEX) as Player;
 		public Player O => Actors.ElementAt(Y_INDEX) as Player;
@@ -54,7 +55,8 @@ namespace TicTacToe
 		#region	METHODS
 		public TicTacToeRuntime()
 		{
-			CommandLog = new(BOARD_SIZE * BOARD_SIZE);
+			UndoLog = new(BOARD_SIZE * BOARD_SIZE);
+			RedoLog = new(BOARD_SIZE * BOARD_SIZE);
 			_input = new ConsoleInput();
 			_input.SelectCommandAblePrompt = "Select action:";
 		}
@@ -109,13 +111,27 @@ namespace TicTacToe
 		}
 
 		/// <summary>
-		/// Pushes <paramref name="command"/> to the command log. Once it is selected by the user.
+		/// Pushes <paramref name="command"/> to the undo/redo logs. Once it is selected by the user.
 		/// </summary>
-		/// <param name="command"></param>
-		protected override void OnCommandSelected(Command command)
+		protected override void OnCommandSelected(ref Command command)
 		{
-			if (command.Key != "Undo" && command.Key != "Deselect")
-				CommandLog.Push(command);
+			if (command.Key == "Deselect")
+				return;
+			else if (command.Key == Player.UndoRedo.UNDO_KEY)
+				RedoLog.Push(Invert(UndoLog.Pop()));
+			else if (command.Key == Player.UndoRedo.REDO_KEY)
+				UndoLog.Push(Invert(RedoLog.Pop()));
+			else
+			{
+				RedoLog.Clear();
+				UndoLog.Push(Invert(command));
+			}
+
+			static Command Invert(Command command)
+			{
+				string key = command.Key == Player.UndoRedo.UNDO_KEY ? Player.UndoRedo.REDO_KEY : Player.UndoRedo.UNDO_KEY;
+				return new(command.undo, command.description, key, command.endsTurn, command.action);
+			}
 		}
 		#endregion
 	}

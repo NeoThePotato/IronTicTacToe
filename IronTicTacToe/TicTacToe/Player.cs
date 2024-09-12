@@ -10,12 +10,12 @@ namespace TicTacToe
 	{
 		public char PlayerMarker => this == TicTacToeRuntime.Instance.X ? 'X' : 'O';
 
-		private readonly ICommandAble _placeMarker, _undo;
+		private readonly ICommandAble _placeMarker, _undoRedo;
 
 		public Player()
 		{
 			_placeMarker = new PlaceMarker();
-			_undo = new Undo();
+			_undoRedo = new UndoRedo();
 		}
 
 		public override string ToString() => PlayerMarker.ToString();
@@ -23,8 +23,8 @@ namespace TicTacToe
 		protected override IEnumerable<ICommandAble> FilterCommandAble(IEnumerable<ICommandAble> source)
 		{
 			source = source.Append(_placeMarker);
-			if (TicTacToeRuntime.Instance.CommandLog.Count > 0)
-				source = source.Append(_undo);
+			if (_undoRedo.GetAvailableActions().Any())
+				source = source.Append(_undoRedo);
 			return source;
 		}
 
@@ -59,19 +59,25 @@ namespace TicTacToe
 		}
 
 		/// <summary>
-		/// Allows the <see cref="Player"/> to undo a previous <see cref="Command"/>.
+		/// Allows the <see cref="Player"/> to undo or redo a previous <see cref="Command"/>.
 		/// </summary>
-		private class Undo : ICommandAble, IHasKey
+		public class UndoRedo : ICommandAble, IHasKey
 		{
+			public const string UNDO_KEY = "Undo";
+			public const string REDO_KEY = "Redo";
+
 			public Actor? Actor => TicTacToeRuntime.Instance.CurrentActor;
 
-			public string? Key => "Undo";
+			public string? Key => "Do";
 
-			public string Description => $"Undo previous action.";
+			public string Description => $"Undo or Redo previous action.";
 
 			public IEnumerable<Command> GetAvailableActions()
 			{
-				yield return new Command(() => { TicTacToeRuntime.Instance.CommandLog.Pop().undo(); }, $"Undo \"{TicTacToeRuntime.Instance.CommandLog.Peek().Description}\".", "Undo");
+				if (TicTacToeRuntime.Instance.UndoLog.TryPeek(out var undo))
+					yield return undo;
+				if (TicTacToeRuntime.Instance.RedoLog.TryPeek(out var redo))
+					yield return redo;
 			}
 		}
 	}
