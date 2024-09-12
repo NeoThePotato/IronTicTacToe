@@ -101,6 +101,7 @@ namespace TicTacToe
 			}
 			else
 				Console.WriteLine("Game ended.\nIt's a draw.");
+			Input.GetString("Press any key to exit.");
 
 			void HighlightChain(IEnumerable<Tile> chain, ConsoleColor color)
 			{
