@@ -30,17 +30,21 @@ namespace TicTacToe
 		{
 			get
 			{
-				_completedLine = TileMap.GetAllPossibleLines().FirstOrDefault(AllSameActor);
-				return _completedLine != null || AllMarkersPlaced();
+				return TryGetCompletedLine(out _completedLine) || AllMarkersPlaced();
 
-				bool AllSameActor(IEnumerable<Tile> line)
+				bool TryGetCompletedLine(out IEnumerable<Tile> line)
 				{
-					if (line.First().TryGetObject<Marker>(out var marker))
+					return (line = TileMap.GetAllPossibleLines().FirstOrDefault(AllSameActor)) != null;
+
+					bool AllSameActor(IEnumerable<Tile> line)
 					{
-						var actor = marker!.Actor;
-						return line.All(t => t.TryGetObject<Marker>(out var marker) && marker.Actor == actor);
+						if (line.First().TryGetObject<Marker>(out var marker))
+						{
+							var actor = marker!.Actor;
+							return line.All(t => t.TryGetObject<Marker>(out var marker) && marker.Actor == actor);
+						}
+						return false;
 					}
-					return false;
 				}
 
 				bool AllMarkersPlaced() => TileMap.All(t => t.HasObject);
