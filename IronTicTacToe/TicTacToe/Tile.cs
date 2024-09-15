@@ -5,9 +5,9 @@ using static TicTacToe.TicTacToeRuntime;
 namespace TicTacToe
 {
 	/// <summary>
-	/// Chain is an alias for <see cref="Tile"/>s in a single line; either vertically, horizontally, or diagonally.
+	/// Line is an alias for <see cref="Tile"/>s in a single line; either vertically, horizontally, or diagonally.
 	/// </summary>
-	using Chain = IEnumerable<Tile>;
+	using Line = IEnumerable<Tile>;
 
 	/// <summary>
 	/// Represents a single tile in a <see cref="TicTacToe"/> <see cref="TileMap"/>.
@@ -27,11 +27,11 @@ namespace TicTacToe
 	}
 
 	/// <summary>
-	/// Contains functions for getting series of <see cref="Chain"/>s. Useful for checking for win conditions.
+	/// Contains functions for getting series of <see cref="Line"/>s. Useful for checking for win conditions.
 	/// </summary>
 	public static class TileExtensions
 	{
-		public static IEnumerable<Chain> GetAllPossibleChains(this TileMap tileMap)
+		public static IEnumerable<Line> GetAllPossibleLines(this TileMap tileMap)
 		{
 			for (var row = 0; row < tileMap.SizeY; row++)
 				yield return tileMap.GetRow(row);
@@ -42,14 +42,14 @@ namespace TicTacToe
 		}
 
 		/// <returns>The <paramref name="row"/>th row in <paramref name="tileMap"/>.</returns>
-		public static Chain GetRow(this TileMap tileMap, int row)
+		public static Line GetRow(this TileMap tileMap, int row)
 		{
 			for (int y = 0; y < tileMap.SizeX; y++)
 				yield return tileMap[new(row, y)] as Tile;
 		}
 
 		/// <returns>The <paramref name="column"/>th column in <paramref name="tileMap"/>.</returns>
-		public static Chain GetColumn(this TileMap tileMap, int column)
+		public static Line GetColumn(this TileMap tileMap, int column)
 		{
 			for (int x = 0; x < tileMap.SizeY; x++)
 				yield return tileMap[new(x, column)] as Tile;
@@ -59,7 +59,7 @@ namespace TicTacToe
 		/// The down-right diagonal in <paramref name="tileMap"/> if <paramref name="downright"/> is <see langword="true"/>.
 		/// Returns the down-left diagonal otherwise.
 		/// </returns>
-		public static Chain GetDiagonal(this TileMap tileMap, bool downright)
+		public static Line GetDiagonal(this TileMap tileMap, bool downright)
 		{
 			if (downright)
 			{

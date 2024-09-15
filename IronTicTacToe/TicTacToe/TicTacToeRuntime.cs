@@ -24,21 +24,21 @@ namespace TicTacToe
 		public Player O => Actors.ElementAt(Y_INDEX) as Player;
 
 		/// <summary>
-		/// Exits the game once a player completes a 3-<see cref="Marker"/> long chain. Or once all <see cref="Tile"/>s are occupied.
+		/// Exits the game once a player completes a <see cref="BOARD_SIZE"/>-<see cref="Marker"/> long line. Or once all <see cref="Tile"/>s are occupied.
 		/// </summary>
 		public override bool ExitCondition
 		{
 			get
 			{
-				_completedChain = TileMap.GetAllPossibleChains().FirstOrDefault(AllSameActor);
-				return _completedChain != null || AllMarkersPlaced();
+				_completedLine = TileMap.GetAllPossibleLines().FirstOrDefault(AllSameActor);
+				return _completedLine != null || AllMarkersPlaced();
 
-				bool AllSameActor(IEnumerable<Tile> chain)
+				bool AllSameActor(IEnumerable<Tile> line)
 				{
-					if (chain.First().TryGetObject<Marker>(out var marker))
+					if (line.First().TryGetObject<Marker>(out var marker))
 					{
 						var actor = marker!.Actor;
-						return chain.All(t => t.TryGetObject<Marker>(out var marker) && marker.Actor == actor);
+						return line.All(t => t.TryGetObject<Marker>(out var marker) && marker.Actor == actor);
 					}
 					return false;
 				}
@@ -49,7 +49,7 @@ namespace TicTacToe
 		public override IInput Input => _input;
 
 		private readonly ConsoleInput _input;
-		private IEnumerable<Tile>? _completedChain;
+		private IEnumerable<Tile>? _completedLine;
 		#endregion
 
 		#region	METHODS
@@ -93,17 +93,17 @@ namespace TicTacToe
 		/// </summary>
 		protected override void OnExit()
 		{
-			if (_completedChain != null)
+			if (_completedLine != null)
 			{
-				HighlightChain(_completedChain, ConsoleColor.Yellow);
-				var winner = _completedChain.First().Object.Actor;
+				HighlightLine(_completedLine, ConsoleColor.Yellow);
+				var winner = _completedLine.First().Object.Actor;
 				Console.WriteLine($"Game ended.\n{winner} wins.");
 			}
 			else
 				Console.WriteLine("Game ended.\nIt's a draw.");
 			Input.GetString("Press any key to exit.");
 
-			void HighlightChain(IEnumerable<Tile> chain, ConsoleColor color)
+			void HighlightLine(IEnumerable<Tile> chain, ConsoleColor color)
 			{
 				foreach (var tile in chain.Cast<Tile>())
 					tile.BgColor = (byte)color;
